@@ -5,10 +5,10 @@ using UnityEngine;
 
 public class TrackingProvider : MonoBehaviour
 {
-    public static TrackingProvider Instance { get; set; }
+    public static TrackingProvider Instance { get; private set; }
 
-    private List<Tracker> _allTrackers = new List<Tracker>();
-    private List<LandMarkTracker> _landMarkTrackers = new List<LandMarkTracker>();
+    private readonly List<Tracker> _allTrackers = new List<Tracker>();
+    private readonly List<LandMarkTracker> _landMarkTrackers = new List<LandMarkTracker>();
 
     [SerializeField] private int _defaultTrackSize;
     [SerializeField] private float _defaultTrackingInterval;

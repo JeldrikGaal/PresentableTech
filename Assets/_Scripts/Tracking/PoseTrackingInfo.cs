@@ -3,54 +3,54 @@ using Mediapipe;
 
 public static class PoseTrackingInfo
 {
-    // Removed some connections that are not needed to be visualised for HyTea
-    public static readonly List<(int, int)> Connections = new List<(int, int)>
+    public static readonly List<(LandmarkNames, LandmarkNames)> Connections = new List<(LandmarkNames, LandmarkNames)>
     {
+        // Removed some connections that are not needed to be visualised for HyTea
         /* // Left Eye
-        (0, 1),
-        (1, 2),
-        (2, 3),
-        (3, 7),
+        (LandmarkNames.Nose, LandmarkNames.LeftEyeInner),
+        (LandmarkNames.LeftEyeInner, LandmarkNames.LeftEye),
+        (LandmarkNames.LeftEye, LandmarkNames.LeftEyeOuter),
+        (LandmarkNames.LeftEyeOuter, LandmarkNames.LeftEar),
         // Right Eye
-        (0, 4),
-        (4, 5),
-        (5, 6),
-        (6, 8),
+        (LandmarkNames.Nose, LandmarkNames.RightEyeInner),
+        (LandmarkNames.RightEyeInner, LandmarkNames.RightEye),
+        (LandmarkNames.RightEye, LandmarkNames.RightEyeOuter),
+        (LandmarkNames.RightEyeOuter, LandmarkNames.RightEar),
         // Lips
-        (9, 10), */
+        (LandmarkNames.MouthLeft, LandmarkNames.MouthRight), */
         // Left Arm
-        (11, 13),
-        (13, 15),
+        (LandmarkNames.LeftShoulder, LandmarkNames.LeftElbow),
+        (LandmarkNames.LeftElbow, LandmarkNames.LeftWrist),
         // Left Hand
-        (15, 17),
-        (15, 19),
-        (15, 21),
-        (17, 19),
+        (LandmarkNames.LeftWrist, LandmarkNames.LeftPinky),
+        (LandmarkNames.LeftWrist, LandmarkNames.LeftIndex),
+        (LandmarkNames.LeftWrist, LandmarkNames.LeftThumb),
+        (LandmarkNames.LeftPinky, LandmarkNames.LeftIndex),
         // Right Arm
-        (12, 14),
-        (14, 16),
+        (LandmarkNames.RightShoulder, LandmarkNames.RightElbow),
+        (LandmarkNames.RightElbow, LandmarkNames.RightWrist),
         // Right Hand
-        (16, 18),
-        (16, 20),
-        (16, 22),
-        (18, 20),
+        (LandmarkNames.RightWrist, LandmarkNames.RightPinky),
+        (LandmarkNames.RightWrist, LandmarkNames.RightIndex),
+        (LandmarkNames.RightWrist, LandmarkNames.RightThumb),
+        (LandmarkNames.RightPinky, LandmarkNames.RightIndex),
         // Torso
-        (11, 12),
-        (12, 24),
-        (24, 23),
-        (23, 11),
+        (LandmarkNames.LeftShoulder, LandmarkNames.RightShoulder),
+        (LandmarkNames.RightShoulder, LandmarkNames.RightHip),
+        (LandmarkNames.RightHip, LandmarkNames.LeftHip),
+        (LandmarkNames.LeftHip, LandmarkNames.LeftShoulder),
         // Left Leg
-        (23, 25),
-        (25, 27),
-        (27, 29),
-        (27, 31),
-        (29, 31),
+        (LandmarkNames.LeftHip, LandmarkNames.LeftKnee),
+        (LandmarkNames.LeftKnee, LandmarkNames.LeftAnkle),
+        (LandmarkNames.LeftAnkle, LandmarkNames.LeftHeel),
+        (LandmarkNames.LeftAnkle, LandmarkNames.LeftFootIndex),
+        (LandmarkNames.LeftHeel, LandmarkNames.LeftFootIndex),
         // Right Leg
-        (24, 26),
-        (26, 28),
-        (28, 30),
-        (28, 32),
-        (30, 32),
+        (LandmarkNames.RightHip, LandmarkNames.RightKnee),
+        (LandmarkNames.RightKnee, LandmarkNames.RightAnkle),
+        (LandmarkNames.RightAnkle, LandmarkNames.RightHeel),
+        (LandmarkNames.RightAnkle, LandmarkNames.RightFootIndex),
+        (LandmarkNames.RightHeel, LandmarkNames.RightFootIndex),
     };
 
     public enum LandmarkNames

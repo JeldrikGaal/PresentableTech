@@ -113,8 +113,8 @@ public class SkeletonVisualization : MonoBehaviour
         
         for (int i = 0; i < PoseTrackingInfo.Connections.Count; i++)
         {
-            Vector3 pos1 = _skeletonPoints[PoseTrackingInfo.Connections[i].Item1].transform.position;
-            Vector3 pos2 = _skeletonPoints[PoseTrackingInfo.Connections[i].Item2].transform.position;
+            Vector3 pos1 = _skeletonPoints[PoseTrackingInfo.LandmarkIndexes[PoseTrackingInfo.Connections[i].Item1]].transform.position;
+            Vector3 pos2 = _skeletonPoints[PoseTrackingInfo.LandmarkIndexes[PoseTrackingInfo.Connections[i].Item2]].transform.position;
 
             // If the connection is not visible, set the positions to zero
             if (! (pos1 == _invisPoint.transform.position || pos2 == _invisPoint.transform.position) )
