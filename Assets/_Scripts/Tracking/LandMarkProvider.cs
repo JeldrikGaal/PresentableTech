@@ -20,12 +20,12 @@ public class LandMarkProvider : MonoBehaviour
         {
             Destroy(gameObject);
         }
-        PresentationPoseTrackingSolution.ReceivedLandmarks += SaveLandMarks;
+        PresentablePoseTrackingSolution.ReceivedLandmarks += SaveLandMarks;
     }
     
     private void OnDestroy()
     {
-        PresentationPoseTrackingSolution.ReceivedLandmarks -= SaveLandMarks;
+        PresentablePoseTrackingSolution.ReceivedLandmarks -= SaveLandMarks;
     }
     
     private void SaveLandMarks(NormalizedLandmarkList list)

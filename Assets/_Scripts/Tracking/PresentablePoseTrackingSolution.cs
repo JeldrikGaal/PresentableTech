@@ -9,7 +9,7 @@ using UnityEngine;
 // Extension for the MediaPipe ImageSourceSolution that mainly provides an Event which is invoked when the landmarks are received.
 // This is then used by the LandMarkProvider to get the landmarks and update the pose of the character.
 
-public class PresentationPoseTrackingSolution : ImageSourceSolution<PoseTrackingGraph>
+public class PresentablePoseTrackingSolution : ImageSourceSolution<PoseTrackingGraph>
 {
   public static event Action<NormalizedLandmarkList> ReceivedLandmarks;
 
