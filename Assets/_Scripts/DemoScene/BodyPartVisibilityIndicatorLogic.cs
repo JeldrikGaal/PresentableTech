@@ -13,7 +13,7 @@ public class BodyPartVisibilityIndicatorLogic : MonoBehaviour
         public ColorSwitchIndicator indicator;
     }
     
-    private Dictionary<PoseTrackingInfo.BodyPart, ColorSwitchIndicator> _indicatorFromBodyPart = new Dictionary<PoseTrackingInfo.BodyPart, ColorSwitchIndicator>();
+    private readonly Dictionary<PoseTrackingInfo.BodyPart, ColorSwitchIndicator> _indicatorFromBodyPart = new Dictionary<PoseTrackingInfo.BodyPart, ColorSwitchIndicator>();
     [SerializeField] private List<IndicatorColorPair> _switchIndicators;
 
     private void InitializeDictionary()
@@ -43,14 +43,7 @@ public class BodyPartVisibilityIndicatorLogic : MonoBehaviour
         List<PoseTrackingInfo.BodyPart> visibleBodyParts = PoseTrackingInfo.GetVisibleBodyParts(LandMarkProvider.Instance.LandmarkList);
         foreach (var keyPair in  _indicatorFromBodyPart)
         {
-            if (visibleBodyParts.Contains(keyPair.Key) )
-            {
-                keyPair.Value.SetColor(Color.green);
-            }
-            else
-            {
-                keyPair.Value.SetColor(Color.red);
-            }
+            keyPair.Value.SetColor(visibleBodyParts.Contains(keyPair.Key) ? Color.green : Color.red);
         }
     }
 }

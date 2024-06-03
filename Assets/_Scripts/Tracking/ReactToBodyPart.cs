@@ -4,7 +4,7 @@ using UnityEngine;
 // 
 public class ReactToBodyPart : MonoBehaviour
 {
-    [SerializeField] private PoseVisualizationTest _visualization;
+    [SerializeField] private SkeletonVisualization _visualization;
     [SerializeField] private float _neededTime;
     [SerializeField] private Vector2 _reactionRange = Vector2.one;
     

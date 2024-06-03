@@ -17,7 +17,7 @@ public class Tracker
         }
     }
 
-    private List<TimeStep> _timeSteps = new List<TimeStep>();
+    private readonly List<TimeStep> _timeSteps = new List<TimeStep>();
 
     protected bool _trackingStarted;
     
@@ -99,7 +99,7 @@ public class Tracker
 
 public class GameObjectTracker : Tracker 
 {
-    private GameObject _objectToTrack;
+    private readonly GameObject _objectToTrack;
     
     public GameObjectTracker(GameObject objectToTrack, int trackedStepAmount, float trackingInterval)
     {
@@ -132,7 +132,7 @@ public class GameObjectTracker : Tracker
 
 public class LandMarkTracker : Tracker
 {
-    private PoseTrackingInfo.LandmarkNames _landmarkToTrack;
+    private readonly PoseTrackingInfo.LandmarkNames _landmarkToTrack;
     
     public LandMarkTracker( PoseTrackingInfo.LandmarkNames landmarkToTrack, int trackedStepAmount, float trackingInterval)
     {

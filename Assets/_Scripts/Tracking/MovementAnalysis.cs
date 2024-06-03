@@ -7,8 +7,8 @@ public class MovementAnalysis : MonoBehaviour
     [SerializeField] private float _motionSensitivity;
     [SerializeField] private float _positionSensitivity;
 
-    private float _lastRightSwipeTime = 0;
-    private float _rightSwipeCooldown = 1f;
+    private float _lastRightSwipeTime;
+    private readonly float _rightSwipeCooldown = 1f;
 
     private bool _analysisStarted;
     private bool _analysisCanBeStarted;
@@ -38,10 +38,10 @@ public class MovementAnalysis : MonoBehaviour
 
     private void Analysis()
     {
-        bool rightSwipeThisFrame = RightSwipeAnalysis();
+        RightSwipeAnalysis();
     }
 
-    public bool TryStartAnalysis()
+    private bool TryStartAnalysis()
     {
         if (_analysisCanBeStarted && !_analysisStarted)
         {
@@ -58,7 +58,7 @@ public class MovementAnalysis : MonoBehaviour
         return _analysisStarted;
     }
 
-    private bool RightSwipeAnalysis()
+    private void RightSwipeAnalysis()
     {
         List<Tracker.TimeStep> rightWristTrack = TrackingProvider.Instance.GetLandMarkTracker(PoseTrackingInfo.LandmarkNames.RightWrist).GetTimeSteps();
         if (CheckTimestepTrackForDirection(MotionDirection.Right, rightWristTrack , _motionSensitivity, _positionSensitivity))
@@ -67,11 +67,8 @@ public class MovementAnalysis : MonoBehaviour
             {
                 OnGestureDetected?.Invoke(Gestures.RightSwipe);
                 _lastRightSwipeTime = Time.time;
-                return true;
             }
         }
-
-        return false;
     }
 
     private bool CheckTimestepTrackForDirection( MotionDirection directionToFind, List<Tracker.TimeStep> track, float motionSensitivity, float positionSensitivity)

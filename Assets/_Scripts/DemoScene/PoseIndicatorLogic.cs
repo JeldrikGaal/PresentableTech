@@ -1,7 +1,4 @@
-using System;
-using System.Collections;
 using System.Collections.Generic;
-using Mediapipe;
 using UnityEngine;
 using Color = UnityEngine.Color;
 
@@ -23,12 +20,11 @@ public class PoseIndicatorLogic : MonoBehaviour
             
         // Hands to close to Face
         (float leftHandNoseDistance, float rightHandNoseDistance) = PoseAnalysis.GetHandsToNoseDistance( LandMarkProvider.Instance.VectorLandmarkList);
-        
-        bool tooCloseTooFace = false;
-        tooCloseTooFace  = leftHandNoseDistance <= _handToNoseMaxDistance || rightHandNoseDistance <= _handToNoseMaxDistance;
+
+        bool tooCloseTooFace = leftHandNoseDistance <= _handToNoseMaxDistance || rightHandNoseDistance <= _handToNoseMaxDistance;
         _indicators[1].SetColor(tooCloseTooFace ? Color.green : Color.red);
         
         // Crossed Legs
-        _indicators[2].SetColor(PoseAnalysis.AnalyzeForCrossedLegs(LandMarkProvider.Instance.VectorLandmarkList, false) ? Color.green : Color.red);
+        _indicators[2].SetColor(PoseAnalysis.AnalyzeForCrossedLegs(LandMarkProvider.Instance.VectorLandmarkList) ? Color.green : Color.red);
     }
 }

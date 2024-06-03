@@ -2,7 +2,7 @@ using System.Collections.Generic;
 using Mediapipe;
 using UnityEngine;
 
-public class PoseVisualizationTest : MonoBehaviour
+public class SkeletonVisualization : MonoBehaviour
 {
     [SerializeField] private List<GameObject> _skeletonPoints;
     [SerializeField] private GameObject _invisPoint;
@@ -13,10 +13,9 @@ public class PoseVisualizationTest : MonoBehaviour
 
     [SerializeField] private float _positionScale; 
     [Range(0,1)]
-    [SerializeField] private float _requiredVisiblity; 
+    [SerializeField] private float _requiredVisibility; 
     
-    private List<LineRenderer> _connectionRendererList = new List<LineRenderer>();
-    private int count = 0;
+    private readonly List<LineRenderer> _connectionRendererList = new List<LineRenderer>();
     private void Start()
     {
         Setup();
@@ -24,7 +23,7 @@ public class PoseVisualizationTest : MonoBehaviour
 
     private void Setup()
     {
-        foreach (var connection in PoseTrackingInfo.Connections)
+        foreach (var unused in PoseTrackingInfo.Connections)
         {
             SpawnConnectionRenderer();
         }
@@ -50,7 +49,7 @@ public class PoseVisualizationTest : MonoBehaviour
         NormalizedLandmarkList landMarkList = LandMarkProvider.Instance.LandmarkList;
         for (int i = 0; i < landMarkList.Landmark.Count; i++)
         {
-            if (landMarkList.Landmark[i].Visibility < _requiredVisiblity)
+            if (landMarkList.Landmark[i].Visibility < _requiredVisibility)
             {
                 HideSkeletonPoint(_skeletonPoints[i]);
             }
