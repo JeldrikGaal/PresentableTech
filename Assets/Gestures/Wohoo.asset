@@ -14,7 +14,7 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   Name: Wohoo
   Duration: 0.5
-  LandMarkToTrack: 16
+  LandMarkToTrack: 0
   Cooldown: 2
   StepAnalysisParameters:
     XLimits: {x: -0.01, y: 0.01}
