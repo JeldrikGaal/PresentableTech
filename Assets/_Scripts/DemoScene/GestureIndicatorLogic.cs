@@ -12,7 +12,7 @@ public class GestureIndicatorLogic : MonoBehaviour
         MovementAnalysis.OnGestureDetected -= ReactToGesture;
     }
 
-    private void ReactToGesture(Gesture gesture)
+    private void ReactToGesture(GestureHolder gesture)
     {
         NotificationProvider.Instance.SpawnNotification(gesture.Name, 1.5f);
     }

@@ -6,12 +6,12 @@ using UnityEngine;
 
 public class MovementAnalysis : MonoBehaviour
 {
-    [SerializeField] private List<Gesture> _gesturesToAnalyse;
-    [SerializeField] private Dictionary<Gesture, float> _gestureCooldowns = new Dictionary<Gesture, float>();
+    [SerializeField] private List<GestureHolder> _gesturesToAnalyse;
+    [SerializeField] private Dictionary<GestureHolder, float> _gestureCooldowns = new Dictionary<GestureHolder, float>();
     
     private bool _analysisStarted;
     private bool _analysisCanBeStarted;
-    public static event Action<Gesture> OnGestureDetected;
+    public static event Action<GestureHolder> OnGestureDetected;
 
     async void Start()
     { 
@@ -32,9 +32,13 @@ public class MovementAnalysis : MonoBehaviour
 
     async Task StartTrackers()
     {
-        foreach (var gesture in _gesturesToAnalyse)
+        foreach (var gestureHolder in _gesturesToAnalyse)
         {
-            await TrackingProvider.Instance.StartLandMarkTracker(gesture.LandMarkToTrack);
+            foreach (var gesture in gestureHolder.Gestures)
+            {
+                await TrackingProvider.Instance.StartLandMarkTracker(gesture.LandMarkToTrack);
+            }
+            
         }
     }
     
@@ -68,34 +72,37 @@ public class MovementAnalysis : MonoBehaviour
         }
     }
 
-    private void RunGestureAnalysis(Gesture gesture)
+    private void RunGestureAnalysis(GestureHolder gestureHolder)
     {
-        List<Tracker.TimeStep> track = TrackingProvider.Instance.GetLandMarkTracker(gesture.LandMarkToTrack).GetTimeStepsFromLastSeconds(gesture.Duration);
-        List<TrackAnalysis.TrackStepInformation> trackStepInfo = TrackAnalysis.GetStepInformationFromTrack(track, gesture.StepAnalysisParameters);
-        
-        foreach (var directionPercentage in gesture.DirectionPercentages)
+        List<bool> gestureResults = new List<bool>();
+        foreach (var gesture in gestureHolder.Gestures)
         {
-            int count = TrackAnalysis.FoundDirections(trackStepInfo).FindAll(e => e == directionPercentage.Direction).Count;
-            // If one of the needed direction percentages is not met cancel the analysis
-            if ( ! (count > track.Count * gesture.GetPercentageForDirection(directionPercentage.Direction)) ) 
+            List<Tracker.TimeStep> track = TrackingProvider.Instance.GetLandMarkTracker(gesture.LandMarkToTrack).GetTimeStepsFromLastSeconds(gestureHolder.Duration);
+            List<TrackAnalysis.TrackStepInformation> trackStepInfo = TrackAnalysis.GetStepInformationFromTrack(track, gesture.StepAnalysisParameters);
+        
+            foreach (var directionPercentage in gesture.DirectionPercentages)
             {
-                return;
+                int count = TrackAnalysis.FoundDirections(trackStepInfo).FindAll(e => e == directionPercentage.Direction).Count;
+                // If one of the needed direction percentages is not met cancel the analysis
+                if ( ! (count > track.Count * gesture.GetPercentageForDirection(directionPercentage.Direction)) ) 
+                {
+                    return;
+                }
             }
         }
-
-        if (!IsGestureOnCooldown(gesture))
+        if (!IsGestureOnCooldown(gestureHolder))
         {
-            GestureDetected(gesture);
+            GestureDetected(gestureHolder);
         }
     }
 
-    private void GestureDetected(Gesture gesture)
+    private void GestureDetected(GestureHolder gesture)
     {
         OnGestureDetected?.Invoke(gesture);
         _gestureCooldowns[gesture] = gesture.Cooldown;
     }
     
-    private bool IsGestureOnCooldown(Gesture gesture)
+    private bool IsGestureOnCooldown(GestureHolder gesture)
     {
         return _gestureCooldowns[gesture] > 0;
     }

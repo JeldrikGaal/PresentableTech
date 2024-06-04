@@ -10,15 +10,12 @@ MonoBehaviour:
   m_Enabled: 1
   m_EditorHideFlags: 0
   m_Script: {fileID: 11500000, guid: 086fa0f94f5380e46aff06b1910ab0b4, type: 3}
-  m_Name: Wohoo
+  m_Name: LeftWristLeftSwipe
   m_EditorClassIdentifier: 
-  Name: Wohoo
-  Duration: 0.5
-  LandMarkToTrack: 0
-  Cooldown: 2
+  LandMarkToTrack: 15
   StepAnalysisParameters:
     XLimits: {x: -0.01, y: 0.01}
     YLimits: {x: -0.01, y: 0.01}
   DirectionPercentages:
-  - Direction: 2
+  - Direction: 0
     Percentage: 0.7

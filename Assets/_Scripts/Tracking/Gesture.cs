@@ -1,14 +1,12 @@
 using System;
 using System.Collections.Generic;
+using Unity.VisualScripting;
 using UnityEngine;
 
 [CreateAssetMenu(menuName = "Custom/Gesture")]
 public class Gesture : ScriptableObject
 {
-   public string Name;
-   public float Duration;
    public PoseTrackingInfo.LandmarkNames LandMarkToTrack;
-   public float Cooldown;
 
    public TrackAnalysis.StepAnalysisParameters StepAnalysisParameters;
    public List<DirectionPercentage> DirectionPercentages;
@@ -25,4 +23,14 @@ public class Gesture : ScriptableObject
    {
       return DirectionPercentages.Find(e => e.Direction == direction).Percentage;
    }
+}
+
+[CreateAssetMenu(menuName = "Custom/GestureHolder")]
+public class GestureHolder : ScriptableObject
+{
+   public string Name;
+   public float Duration;
+   public float Cooldown;
+   public List<Gesture> Gestures;
+   
 }
