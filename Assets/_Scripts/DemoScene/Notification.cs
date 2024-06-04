@@ -1,3 +1,4 @@
+using System;
 using TMPro;
 using UnityEngine;
 
@@ -7,6 +8,8 @@ public class Notification : MonoBehaviour
     private float _lifeTime;
     private float _spawnTime;
     private bool _activated;
+
+    public static event Action<Notification> OnNotificationDisable; 
 
     public void Initialize(string text, float lifeTime)
     {
@@ -33,6 +36,7 @@ public class Notification : MonoBehaviour
 
     private void Deactivate()
     {
-        Destroy(gameObject);
+        OnNotificationDisable.Invoke(this);
+        gameObject.SetActive(false);
     }
 }

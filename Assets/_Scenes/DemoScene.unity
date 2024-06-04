@@ -248,8 +248,10 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 5d3f15e99ae2b7844adc0416c24858fc, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  _motionSensitivity: 0.3
-  _positionSensitivity: 0.01
+  _gesturesToAnalyse:
+  - {fileID: 11400000, guid: 328bfff9c13ebca4b96b4ce18406b998, type: 2}
+  - {fileID: 11400000, guid: ac41c8f906af91749879cd07acdedeb8, type: 2}
+  - {fileID: 11400000, guid: 0cda5ca7af45ced45a7709485cc51080, type: 2}
 --- !u!114 &60329991
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -1754,6 +1756,7 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   _notificationPrefab: {fileID: 1703799404190511726, guid: a37eab4f69635b94b8ea1d9dbe55267a, type: 3}
   _notificationParent: {fileID: 883357330}
+  _notificationHeight: 60
 --- !u!1001 &1093812350
 PrefabInstance:
   m_ObjectHideFlags: 0

@@ -13,6 +13,7 @@ public class TrackingProvider : MonoBehaviour
     [SerializeField] private int _defaultTrackSize;
     [SerializeField] private float _defaultTrackingInterval;
     
+    
     private void Awake()
     {
         if (Instance == null)
@@ -46,6 +47,11 @@ public class TrackingProvider : MonoBehaviour
             _landMarkTrackers.Add(new LandMarkTracker(landmarkName, _defaultTrackSize, _defaultTrackingInterval));
         }
         _allTrackers.AddRange(_landMarkTrackers);
+    }
+
+    public void ConfigureLandMarkTracker()
+    {
+        
     }
     
     public LandMarkTracker GetLandMarkTracker(PoseTrackingInfo.LandmarkNames landmarkName)

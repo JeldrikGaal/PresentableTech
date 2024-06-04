@@ -1,31 +1,49 @@
 using System;
 using System.Collections.Generic;
+using System.Linq;
+using System.Threading.Tasks;
 using UnityEngine;
 
 public class MovementAnalysis : MonoBehaviour
 {
-    [SerializeField] private float _motionSensitivity;
-    [SerializeField] private float _positionSensitivity;
-
-    private float _lastRightSwipeTime;
-    private readonly float _rightSwipeCooldown = 1f;
-
+    [SerializeField] private List<Gesture> _gesturesToAnalyse;
+    [SerializeField] private Dictionary<Gesture, float> _gestureCooldowns = new Dictionary<Gesture, float>();
+    
     private bool _analysisStarted;
     private bool _analysisCanBeStarted;
-
-    public static event Action<Gestures> OnGestureDetected;
-
-    public enum Gestures
-    {
-        RightSwipe,
-        LeftSwipe
-    }
+    public static event Action<Gesture> OnGestureDetected;
 
     async void Start()
     { 
         await LandMarkProvider.Instance.WaitForLandMarkData();
         _analysisCanBeStarted = true;
         TryStartAnalysis();
+        InitializeGestureCooldowns();
+    }
+    
+    async void TryStartAnalysis()
+    {
+        if (_analysisCanBeStarted && !_analysisStarted)
+        {
+            _analysisStarted = true;
+            await StartTrackers();
+        }
+    }
+
+    async Task StartTrackers()
+    {
+        foreach (var gesture in _gesturesToAnalyse)
+        {
+            await TrackingProvider.Instance.StartLandMarkTracker(gesture.LandMarkToTrack);
+        }
+    }
+    
+    private void InitializeGestureCooldowns()
+    {
+        foreach (var gesture in _gesturesToAnalyse)
+        {
+            _gestureCooldowns.Add(gesture, 0);
+        }
     }
 
     private void Update()
@@ -33,24 +51,8 @@ public class MovementAnalysis : MonoBehaviour
         if (IsAnalysisRunning())
         {
             Analysis();
+            HandleGestureCooldowns();
         }
-    }
-
-    private void Analysis()
-    {
-        RightSwipeAnalysis();
-    }
-
-    private bool TryStartAnalysis()
-    {
-        if (_analysisCanBeStarted && !_analysisStarted)
-        {
-            _analysisStarted = true;
-            TrackingProvider.Instance.StartLandMarkTracker(PoseTrackingInfo.LandmarkNames.RightWrist);
-            return true;
-        }
-
-        return false;
     }
 
     private bool IsAnalysisRunning()
@@ -58,70 +60,57 @@ public class MovementAnalysis : MonoBehaviour
         return _analysisStarted;
     }
 
-    private void RightSwipeAnalysis()
+    private void Analysis()
     {
-        List<Tracker.TimeStep> rightWristTrack = TrackingProvider.Instance.GetLandMarkTracker(PoseTrackingInfo.LandmarkNames.RightWrist).GetTimeSteps();
-        if (CheckTimestepTrackForDirection(MotionDirection.Right, rightWristTrack , _motionSensitivity, _positionSensitivity))
+        foreach (var gesture in _gesturesToAnalyse)
         {
-            if (Time.time - _lastRightSwipeTime > _rightSwipeCooldown)
-            {
-                OnGestureDetected?.Invoke(Gestures.RightSwipe);
-                _lastRightSwipeTime = Time.time;
-            }
+            RunGestureAnalysis(gesture);
         }
     }
 
-    private bool CheckTimestepTrackForDirection( MotionDirection directionToFind, List<Tracker.TimeStep> track, float motionSensitivity, float positionSensitivity)
+    private void RunGestureAnalysis(Gesture gesture)
     {
-        bool horizontal = directionToFind is MotionDirection.Right or MotionDirection.Left;
-        List<MotionDirection> directions = GetMotionsFromTimestepTrack(track, positionSensitivity, horizontal);
-        return CheckDirectionListForValidMotion(directions, directionToFind, track.Count, motionSensitivity);
-    }
-
-    private List<MotionDirection> GetMotionsFromTimestepTrack(List<Tracker.TimeStep> track, float positionSensitivity, bool horizontal)
-    {
-        List<MotionDirection> directions = new List<MotionDirection>();
-        if (horizontal)
-        {
-            for (int i = 1; i < track.Count; i++)
-            {
-                directions.Add(CheckDirectionHorizontal(track[i - 1].Position, track[i].Position, positionSensitivity));
-            }
-        }
-        else
-        {
-            for (int i = 1; i < track.Count; i++)
-            {
-                directions.Add(CheckDirectionVertical(track[i - 1].Position, track[i].Position, positionSensitivity));
-            }
-        }
-
-        return directions;
-    }
-    
-    private bool CheckDirectionListForValidMotion(List<MotionDirection> list, MotionDirection direction, int trackCount, float motionSensitivity)
-    {
-        return list.FindAll(e => e == direction).Count > motionSensitivity * trackCount;
-    }
-    
-
-    private List<MotionDirection> CheckTimestepTrackForAllDirections(List<Tracker.TimeStep> track, float motionSensitivity, float positionSensitivity)
-    {
-        List<MotionDirection> options = new List<MotionDirection>() { MotionDirection.Down , MotionDirection.Left, MotionDirection.Right, MotionDirection.Up};
-        List<MotionDirection> foundDirections = new List<MotionDirection>();
+        List<Tracker.TimeStep> track = TrackingProvider.Instance.GetLandMarkTracker(gesture.LandMarkToTrack).GetTimeStepsFromLastSeconds(gesture.Duration);
+        List<TrackAnalysis.TrackStepInformation> trackStepInfo = TrackAnalysis.GetStepInformationFromTrack(track, gesture.StepAnalysisParameters);
         
-        foreach (var option in options)
+        foreach (var directionPercentage in gesture.DirectionPercentages)
         {
-            if (CheckTimestepTrackForDirection(option, track, motionSensitivity, positionSensitivity))
+            int count = TrackAnalysis.FoundDirections(trackStepInfo).FindAll(e => e == directionPercentage.Direction).Count;
+            // If one of the needed direction percentages is not met cancel the analysis
+            if ( ! (count > track.Count * gesture.GetPercentageForDirection(directionPercentage.Direction)) ) 
             {
-                foundDirections.Add(option);
+                return;
             }
         }
-        return foundDirections;
+
+        if (!IsGestureOnCooldown(gesture))
+        {
+            GestureDetected(gesture);
+        }
+    }
+
+    private void GestureDetected(Gesture gesture)
+    {
+        Debug.Log(gesture.Name);
+        OnGestureDetected?.Invoke(gesture);
+        _gestureCooldowns[gesture] = gesture.Cooldown;
+    }
+    
+    private bool IsGestureOnCooldown(Gesture gesture)
+    {
+        return _gestureCooldowns[gesture] > 0;
+    }
+
+    private void HandleGestureCooldowns()
+    {
+        foreach (var gesture in _gestureCooldowns.Keys.ToList())
+        {
+            _gestureCooldowns[gesture] -= Time.deltaTime;
+        }
     }
     
     [Serializable]
-    enum MotionDirection
+    public enum MotionDirection
     {
         Left,
         Right,
@@ -129,40 +118,5 @@ public class MovementAnalysis : MonoBehaviour
         Down,
         Unclear
     }
-    
-    private MotionDirection CheckDirectionHorizontal(Vector3 start, Vector3 end, float positionSensitivity)
-    {
-        Vector3 difference = end - start;
-        if (Mathf.Abs(difference.x) > positionSensitivity)
-        {
-            if (difference.x > 0)
-            {
-                return MotionDirection.Right;
-            }
-            else
-            {
-                return MotionDirection.Left;
-            }
-        }
 
-        return MotionDirection.Unclear;
-        
-    } 
-    private MotionDirection CheckDirectionVertical(Vector3 start, Vector3 end, float positionSensitivity)
-    {
-        Vector3 difference = end - start;
-        if (Mathf.Abs(difference.y) > positionSensitivity)
-        {
-            if (difference.y > 0)
-            {
-                return MotionDirection.Up;
-            }
-            else
-            {
-                return MotionDirection.Down;
-            }
-        }
-
-        return MotionDirection.Unclear;
-    }
 }
