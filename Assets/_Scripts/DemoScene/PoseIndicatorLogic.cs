@@ -11,7 +11,7 @@ public class PoseIndicatorLogic : MonoBehaviour
 
     private void Update()
     {
-        if (LandMarkProvider.Instance.LandmarkList.Landmark.Count <= 0)
+        if (LandMarkProvider.Instance.LandmarkList.Landmark.Count < PoseTrackingInfo.LandmarkIndexes.Count)
         {
             return;
         }

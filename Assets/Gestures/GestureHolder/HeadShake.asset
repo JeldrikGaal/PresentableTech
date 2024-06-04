@@ -10,11 +10,11 @@ MonoBehaviour:
   m_Enabled: 1
   m_EditorHideFlags: 0
   m_Script: {fileID: 0}
-  m_Name: Smash
+  m_Name: HeadShake
   m_EditorClassIdentifier: Assembly-CSharp::GestureHolder
-  Name: Smash
-  Duration: 0.3
+  Name: HeadShake
+  Duration: 0.5
   Cooldown: 2
   Gestures:
-  - {fileID: 11400000, guid: 328bfff9c13ebca4b96b4ce18406b998, type: 2}
-  - {fileID: 11400000, guid: ac41c8f906af91749879cd07acdedeb8, type: 2}
+  - {fileID: 11400000, guid: aa4f1f49d7fc6fa48961741cf7b90177, type: 2}
+  - {fileID: 11400000, guid: 1bd6752938c383c4cb22dcaf4880a7a8, type: 2}

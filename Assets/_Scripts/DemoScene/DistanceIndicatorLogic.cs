@@ -10,7 +10,7 @@ public class DistanceIndicatorLogic : MonoBehaviour
         {
             return;
         }
-        float cameraDistance = PoseAnalysis.GetNormalizedDistanceToCamera(LandMarkProvider.Instance.VectorLandmarkList);
+        float cameraDistance = PoseAnalysis.GetShoulderPointDistance(LandMarkProvider.Instance.VectorLandmarkList);
         _textIndicator.SetDistanceText(cameraDistance.ToString("0.00"));
     }
 }

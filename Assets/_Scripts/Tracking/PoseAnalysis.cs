@@ -99,22 +99,15 @@ public static class PoseAnalysis
         return handMidpoint;
     }
     
-    public static float GetNormalizedDistanceToCamera(List<Vector2> landmarks)
+    public static float GetShoulderPointDistance(List<Vector2> landmarks)
     {
         var leftShoulder = landmarks[PoseTrackingInfo.LandmarkIndexes[PoseTrackingInfo.LandmarkNames.LeftShoulder]];
         var rightShoulder = landmarks[PoseTrackingInfo.LandmarkIndexes[PoseTrackingInfo.LandmarkNames.RightShoulder]];
-        var nose = landmarks[PoseTrackingInfo.LandmarkIndexes[PoseTrackingInfo.LandmarkNames.Nose]];
-
+        
         // Calculate the reference distance (between the shoulders)
-        float referenceDistance = Vector2.Distance(leftShoulder, rightShoulder);
+        float shoulderDistance = Vector2.Distance(leftShoulder, rightShoulder);
 
-        // Calculate the distance from the nose to one of the shoulders
-        float noseToShoulderDistance = Vector2.Distance(nose, leftShoulder);
-
-        // Normalize the distance
-        float normalizedDistance = noseToShoulderDistance / referenceDistance;
-
-        return normalizedDistance;
+        return shoulderDistance;
     }
     
     public static bool AnalyzeForCrossedLegs(List<Vector2> landmarks, bool flipped = false)

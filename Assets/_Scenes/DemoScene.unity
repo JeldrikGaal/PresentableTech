@@ -249,9 +249,11 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   _gesturesToAnalyse:
-  - {fileID: 11400000, guid: b8304b458e5da1347b1c86c0b38dd46b, type: 2}
-  - {fileID: 11400000, guid: fa6b89ff024aac04299191c247bef091, type: 2}
+  - {fileID: 11400000, guid: cfcc3528bb4171345afe4b53958dd492, type: 2}
+  - {fileID: 11400000, guid: 042be7799392b0a408c217603557aaa9, type: 2}
   - {fileID: 11400000, guid: 323096981d9a77343afdef2e3fc96ae9, type: 2}
+  - {fileID: 11400000, guid: fa6b89ff024aac04299191c247bef091, type: 2}
+  - {fileID: 11400000, guid: a32fe71612c91614883d4c28eb0c7850, type: 2}
 --- !u!114 &60329991
 MonoBehaviour:
   m_ObjectHideFlags: 0
