@@ -17,9 +17,6 @@ public static class TrackAnalysis
     {
         public Tracker.TimeStep Step1;
         public Tracker.TimeStep Step2;
-        public float Duration;
-        public float StartTime;
-        public float EndTime;
         public Vector3 Distance;
         public StepAnalysisParameters StepParameters;
         public List<MovementAnalysis.MotionDirection> Directions;
@@ -28,9 +25,6 @@ public static class TrackAnalysis
         {
             Step1 = step1;
             Step2 = step2;
-            StartTime = Step1.Time;
-            EndTime   = Step2.Time;
-            Duration  = Step2.Time - Step1.Time;
             Distance = Step2.Position - Step1.Position;
             StepParameters = stepParameters;
             Directions = GetDirections();

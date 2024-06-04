@@ -91,7 +91,6 @@ public class MovementAnalysis : MonoBehaviour
 
     private void GestureDetected(Gesture gesture)
     {
-        Debug.Log(gesture.Name);
         OnGestureDetected?.Invoke(gesture);
         _gestureCooldowns[gesture] = gesture.Cooldown;
     }
