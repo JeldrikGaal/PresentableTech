@@ -1,6 +1,7 @@
 using System;
 using System.Collections.Generic;
 using UnityEngine;
+using UnityEngine.Serialization;
 
 public static class TrackAnalysis
 {
@@ -8,8 +9,11 @@ public static class TrackAnalysis
     [Serializable]
     public class StepAnalysisParameters
     {
-        public Vector2 XLimits;
-        public Vector2 YLimits;
+        // Temporary solution: TODO: make step parameters depend on camera / setup
+        [HideInInspector]
+        public Vector2 XStepLimits = new Vector2(-0.005f, 0.005f);
+        [HideInInspector]
+        public Vector2 YStepLimits = new Vector2(-0.005f, 0.005f);
     }
 
     [Serializable]
@@ -35,13 +39,13 @@ public static class TrackAnalysis
             List<MovementAnalysis.MotionDirection> foundDirections = new List<MovementAnalysis.MotionDirection>();
             
             // Vertical Motions
-            if (Mathf.Abs(Distance.y) > StepParameters.YLimits.x && Mathf.Abs(Distance.y) > StepParameters.YLimits.y)
+            if (Mathf.Abs(Distance.y) > StepParameters.YStepLimits.x && Mathf.Abs(Distance.y) > StepParameters.YStepLimits.y)
             {
                 foundDirections.Add(Distance.y > 0 ? MovementAnalysis.MotionDirection.Down : MovementAnalysis.MotionDirection.Up);
             }
             
             // Horizontal Motions
-            if (Mathf.Abs(Distance.x) > StepParameters.XLimits.x && Mathf.Abs(Distance.x) > StepParameters.XLimits.y)
+            if (Mathf.Abs(Distance.x) > StepParameters.XStepLimits.x && Mathf.Abs(Distance.x) > StepParameters.XStepLimits.y)
             {
                 foundDirections.Add(Distance.x > 0 ? MovementAnalysis.MotionDirection.Right : MovementAnalysis.MotionDirection.Left);
             }

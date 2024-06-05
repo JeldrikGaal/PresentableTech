@@ -38,7 +38,6 @@ public class MovementAnalysis : MonoBehaviour
             {
                 await TrackingProvider.Instance.StartLandMarkTracker(gesture.LandMarkToTrack);
             }
-            
         }
     }
     
@@ -77,17 +76,24 @@ public class MovementAnalysis : MonoBehaviour
         List<bool> gestureResults = new List<bool>();
         foreach (var gesture in gestureHolder.Gestures)
         {
-            List<Tracker.TimeStep> track = TrackingProvider.Instance.GetLandMarkTracker(gesture.LandMarkToTrack).GetTimeStepsFromLastSeconds(gestureHolder.Duration);
+            Tracker tracker = TrackingProvider.Instance.GetLandMarkTracker(gesture.LandMarkToTrack);
+            List<Tracker.TimeStep> track = tracker.GetTimeStepsFromLastSeconds(gestureHolder.Duration);
             List<TrackAnalysis.TrackStepInformation> trackStepInfo = TrackAnalysis.GetStepInformationFromTrack(track, gesture.StepAnalysisParameters);
         
             foreach (var directionPercentage in gesture.DirectionPercentages)
             {
                 int count = TrackAnalysis.FoundDirections(trackStepInfo).FindAll(e => e == directionPercentage.Direction).Count;
+                
                 // If one of the needed direction percentages is not met cancel the analysis
-                if ( ! (count > track.Count * gesture.GetPercentageForDirection(directionPercentage.Direction)) ) 
+                if (! directionPercentage.CheckPercentageCondition(count, track.Count))
                 {
                     return;
                 }
+                /*
+                if ( ! (count > track.Count * gesture.GetPercentageForDirection(directionPercentage.Direction)) ) 
+                {
+                    return;
+                }*/
             }
         }
         if (!IsGestureOnCooldown(gestureHolder))

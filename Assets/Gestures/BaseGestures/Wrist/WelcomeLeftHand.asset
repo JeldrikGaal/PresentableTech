@@ -10,19 +10,19 @@ MonoBehaviour:
   m_Enabled: 1
   m_EditorHideFlags: 0
   m_Script: {fileID: 11500000, guid: 086fa0f94f5380e46aff06b1910ab0b4, type: 3}
-  m_Name: RightWristUpSwipe
+  m_Name: WelcomeLeftHand
   m_EditorClassIdentifier: 
-  LandMarkToTrack: 16
+  LandMarkToTrack: 15
   StepAnalysisParameters:
     XStepLimits: {x: -0.005, y: 0.005}
     YStepLimits: {x: -0.005, y: 0.005}
   DirectionPercentages:
-  - Direction: 2
-    Percentage: 0.7
-    Operator: 1
-  - Direction: 0
-    Percentage: 0.5
-    Operator: 0
   - Direction: 1
-    Percentage: 0.5
+    Percentage: 0.3
+    Operator: 1
+  - Direction: 2
+    Percentage: 0.2
+    Operator: 1
+  - Direction: 3
+    Percentage: 0.2
     Operator: 0

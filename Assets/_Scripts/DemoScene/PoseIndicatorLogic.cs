@@ -11,7 +11,7 @@ public class PoseIndicatorLogic : MonoBehaviour
 
     private void Update()
     {
-        if (LandMarkProvider.Instance.LandmarkList.Landmark.Count < PoseTrackingInfo.LandmarkIndexes.Count)
+        if (LandMarkProvider.Instance.VectorLandmarkList.Count < PoseTrackingInfo.LandmarkIndexes.Count)
         {
             return;
         }
@@ -25,6 +25,6 @@ public class PoseIndicatorLogic : MonoBehaviour
         _indicators[1].SetColor(tooCloseTooFace ? Color.green : Color.red);
         
         // Crossed Legs
-        _indicators[2].SetColor(PoseAnalysis.AnalyzeForCrossedLegs(LandMarkProvider.Instance.VectorLandmarkList) ? Color.green : Color.red);
+        _indicators[2].SetColor(PoseAnalysis.AnalyzeForCrossedLegs(LandMarkProvider.Instance.VectorLandmarkList, true) ? Color.green : Color.red);
     }
 }

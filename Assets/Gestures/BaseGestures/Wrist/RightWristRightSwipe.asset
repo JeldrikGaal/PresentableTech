@@ -19,3 +19,4 @@ MonoBehaviour:
   DirectionPercentages:
   - Direction: 1
     Percentage: 0.7
+    Operator: 1
