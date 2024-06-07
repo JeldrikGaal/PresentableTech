@@ -19,10 +19,13 @@ MonoBehaviour:
   DirectionPercentages:
   - Direction: 2
     Percentage: 0.7
-    Operator: 1
+    MinimumPercentage: 0.7
+    MaximumPercentage: 1
   - Direction: 0
     Percentage: 0.5
-    Operator: 0
+    MinimumPercentage: 0.5
+    MaximumPercentage: 1
   - Direction: 1
     Percentage: 0.5
-    Operator: 0
+    MinimumPercentage: 0.5
+    MaximumPercentage: 1

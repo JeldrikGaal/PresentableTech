@@ -14,32 +14,15 @@ public class Gesture : ScriptableObject
    public class DirectionPercentage
    {
       public MovementAnalysis.MotionDirection Direction;
-      [Range(0,1)]
-      public float Percentage;
-      public ComparisonOperator Operator;
       
-      public enum ComparisonOperator
-      {
-         LesserThen,
-         GreaterThen
-      }
+      [Range(0,1)]
+      public float MinimumPercentage = 0;
+      [Range(0,1)]
+      public float MaximumPercentage = 1;
 
       public bool CheckPercentageCondition(int foundCount, int totalCount)
       {
-         switch (Operator)
-         {
-            case ComparisonOperator.LesserThen:
-               return foundCount < totalCount * Percentage;
-            case ComparisonOperator.GreaterThen:
-               return foundCount > totalCount * Percentage;
-            default:
-               throw new ArgumentOutOfRangeException();
-         }
+         return foundCount < totalCount * MaximumPercentage && foundCount > totalCount * MinimumPercentage;
       }
-   }
-
-   public float GetPercentageForDirection(MovementAnalysis.MotionDirection direction)
-   {
-      return DirectionPercentages.Find(e => e.Direction == direction).Percentage;
    }
 }
