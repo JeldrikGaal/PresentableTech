@@ -9,7 +9,7 @@ public static class TrackAnalysis
     [Serializable]
     public class StepAnalysisParameters
     {
-        // Temporary solution: TODO: make step parameters depend on camera / setup
+        // Temporary solution - TODO: make step parameters depend on camera / setup
         [HideInInspector]
         public Vector2 XStepLimits = new Vector2(-0.005f, 0.005f);
         [HideInInspector]
@@ -71,7 +71,7 @@ public static class TrackAnalysis
         return trackStepInformation;
     }
     
-    public static List<MovementAnalysis.MotionDirection> FoundDirections(List<TrackStepInformation> trackStepInformation)
+    private static List<MovementAnalysis.MotionDirection> GetFoundDirections(List<TrackStepInformation> trackStepInformation)
     {
         List<MovementAnalysis.MotionDirection> foundDirections = new List<MovementAnalysis.MotionDirection>();
         
@@ -81,5 +81,11 @@ public static class TrackAnalysis
         }
 
         return foundDirections;
+    }
+
+    public static List<MovementAnalysis.MotionDirection> GetFoundDirectionsFromTrack(List<Tracker.TimeStep> track ,StepAnalysisParameters parameters)
+    {
+        List<TrackStepInformation> trackStepInformation = GetStepInformationFromTrack(track, parameters);
+        return GetFoundDirections(trackStepInformation);
     }
 }

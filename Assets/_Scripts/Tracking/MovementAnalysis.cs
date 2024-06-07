@@ -73,27 +73,21 @@ public class MovementAnalysis : MonoBehaviour
 
     private void RunGestureAnalysis(GestureHolder gestureHolder)
     {
-        List<bool> gestureResults = new List<bool>();
         foreach (var gesture in gestureHolder.Gestures)
         {
             Tracker tracker = TrackingProvider.Instance.GetLandMarkTracker(gesture.LandMarkToTrack);
             List<Tracker.TimeStep> track = tracker.GetTimeStepsFromLastSeconds(gestureHolder.Duration);
-            List<TrackAnalysis.TrackStepInformation> trackStepInfo = TrackAnalysis.GetStepInformationFromTrack(track, gesture.StepAnalysisParameters);
+            List<MotionDirection> foundDirections = TrackAnalysis.GetFoundDirectionsFromTrack(track, gesture.StepAnalysisParameters);
         
             foreach (var directionPercentage in gesture.DirectionPercentages)
             {
-                int count = TrackAnalysis.FoundDirections(trackStepInfo).FindAll(e => e == directionPercentage.Direction).Count;
+                int directionCount = foundDirections.FindAll(e => e == directionPercentage.Direction).Count;
                 
                 // If one of the needed direction percentages is not met cancel the analysis
-                if (! directionPercentage.CheckPercentageCondition(count, track.Count))
+                if (! directionPercentage.CheckPercentageCondition(directionCount, track.Count))
                 {
                     return;
                 }
-                /*
-                if ( ! (count > track.Count * gesture.GetPercentageForDirection(directionPercentage.Direction)) ) 
-                {
-                    return;
-                }*/
             }
         }
         if (!IsGestureOnCooldown(gestureHolder))
