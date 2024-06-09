@@ -10,20 +10,14 @@ MonoBehaviour:
   m_Enabled: 1
   m_EditorHideFlags: 0
   m_Script: {fileID: 11500000, guid: 086fa0f94f5380e46aff06b1910ab0b4, type: 3}
-  m_Name: LeftWristUpSwipe
+  m_Name: LeftWristRightSwipe
   m_EditorClassIdentifier: 
   LandMarkToTrack: 15
   StepAnalysisParameters:
     XStepLimits: {x: -0.005, y: 0.005}
     YStepLimits: {x: -0.005, y: 0.005}
   DirectionPercentages:
-  - Direction: 2
-    MinimumPercentage: 0.6
-    MaximumPercentage: 1
-  - Direction: 0
-    MinimumPercentage: 0
-    MaximumPercentage: 0.4
   - Direction: 1
-    MinimumPercentage: 0
-    MaximumPercentage: 0.4
+    MinimumPercentage: 0.7
+    MaximumPercentage: 1
   PositionConditions: []

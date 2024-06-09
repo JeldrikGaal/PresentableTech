@@ -16,5 +16,7 @@ MonoBehaviour:
   Duration: 0.3
   Cooldown: 2
   Gestures:
-  - {fileID: 11400000, guid: 328bfff9c13ebca4b96b4ce18406b998, type: 2}
-  - {fileID: 11400000, guid: ac41c8f906af91749879cd07acdedeb8, type: 2}
+  - {fileID: 11400000, guid: 8a68116b8baf0054493b562078ac72bb, type: 2}
+  - {fileID: 11400000, guid: e0c93a241a914f14d882c8d6ba86aa57, type: 2}
+  Sequence:
+    Elements: []

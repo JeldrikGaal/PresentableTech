@@ -10,7 +10,9 @@ public class Tracker
         public Vector3 Position { get; private set; }
         public float Time { get; private set; }
 
-        public void SetData(Vector3 position, float time)
+        public float Visibility;
+
+        public void SetData(Vector3 position, float time )
         {
             Position = position;
             Time = time;

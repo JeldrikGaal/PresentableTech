@@ -13,15 +13,15 @@ public class MovementAnalysis : MonoBehaviour
     private bool _analysisCanBeStarted;
     public static event Action<GestureHolder> OnGestureDetected;
 
-    async void Start()
+    private async void Start()
     { 
         await LandMarkProvider.Instance.WaitForLandMarkData();
         _analysisCanBeStarted = true;
         TryStartAnalysis();
         InitializeGestureCooldowns();
     }
-    
-    async void TryStartAnalysis()
+
+    private async void TryStartAnalysis()
     {
         if (_analysisCanBeStarted && !_analysisStarted)
         {
@@ -30,7 +30,7 @@ public class MovementAnalysis : MonoBehaviour
         }
     }
 
-    async Task StartTrackers()
+    private async Task StartTrackers()
     {
         foreach (var gestureHolder in _gesturesToAnalyse)
         {
@@ -56,6 +56,9 @@ public class MovementAnalysis : MonoBehaviour
             Analysis();
             HandleGestureCooldowns();
         }
+
+        Debug.Log(LandMarkProvider.Instance.VectorLandmarkList[PoseTrackingInfo.LandmarkIndexes[PoseTrackingInfo.LandmarkNames.RightWrist]]);
+        Debug.Log(LandMarkProvider.Instance.LandmarkList.Landmark[PoseTrackingInfo.LandmarkIndexes[PoseTrackingInfo.LandmarkNames.RightWrist]].Y);
     }
 
     private bool IsAnalysisRunning()
@@ -79,16 +82,9 @@ public class MovementAnalysis : MonoBehaviour
             List<Tracker.TimeStep> track = tracker.GetTimeStepsFromLastSeconds(gestureHolder.Duration);
             List<MotionDirection> foundDirections = TrackAnalysis.GetFoundDirectionsFromTrack(track, gesture.StepAnalysisParameters);
         
-            foreach (var directionPercentage in gesture.DirectionPercentages)
-            {
-                int directionCount = foundDirections.FindAll(e => e == directionPercentage.Direction).Count;
-                
-                // If one of the needed direction percentages is not met cancel the analysis
-                if (! directionPercentage.CheckPercentageCondition(directionCount, track.Count))
-                {
-                    return;
-                }
-            }
+            if (!AnalyseForDirectionPercentages(gesture, foundDirections, track)) return;
+            if (!AnalyseForPositionConditions(gesture, track)) return;
+            
         }
         if (!IsGestureOnCooldown(gestureHolder))
         {
@@ -96,17 +92,46 @@ public class MovementAnalysis : MonoBehaviour
         }
     }
 
+    private bool AnalyseForDirectionPercentages(Gesture gesture,  List<MotionDirection> foundDirections, List<Tracker.TimeStep> track)
+    {
+        foreach (var directionPercentage in gesture.DirectionPercentages)
+        {
+            int directionCount = foundDirections.FindAll(e => e == directionPercentage.Direction).Count;
+                
+            // If one of the needed direction percentages is not met cancel the analysis
+            if (! directionPercentage.CheckPercentageCondition(directionCount, track.Count))
+            {
+                return false;
+            }
+        }
+
+        return true;
+    }
+    
+    private bool AnalyseForPositionConditions(Gesture gesture, List<Tracker.TimeStep> track)
+    {
+        foreach (var positionCondition in gesture.PositionConditions)
+        {
+            if (!positionCondition.CheckPositionConditionOnTrack(track))
+            {
+                return false;
+            }
+        }
+
+        return true;
+    }
+
+    private bool IsGestureOnCooldown(GestureHolder gesture)
+    {
+        return _gestureCooldowns[gesture] > 0;
+    }
+    
     private void GestureDetected(GestureHolder gesture)
     {
         OnGestureDetected?.Invoke(gesture);
         _gestureCooldowns[gesture] = gesture.Cooldown;
     }
     
-    private bool IsGestureOnCooldown(GestureHolder gesture)
-    {
-        return _gestureCooldowns[gesture] > 0;
-    }
-
     private void HandleGestureCooldowns()
     {
         foreach (var gesture in _gestureCooldowns.Keys.ToList())

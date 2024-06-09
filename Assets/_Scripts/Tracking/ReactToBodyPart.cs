@@ -13,8 +13,8 @@ public class ReactToBodyPart : MonoBehaviour
     private bool _startedCounting;
     private float _enteredTime;
     private Vector3 _startingScale;
-    
-    void Start()
+
+    private void Start()
     {
         InitializeObjectsToReactTo();
         _startingScale = transform.localScale;
@@ -48,7 +48,7 @@ public class ReactToBodyPart : MonoBehaviour
         return xInRange && yInRange;
     }
 
-    void Update()
+    private void Update()
     {
         CountStayInFieldTime();
         ScaleFromStayDuration();

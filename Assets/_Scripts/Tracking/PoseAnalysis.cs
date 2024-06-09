@@ -148,7 +148,6 @@ public static class PoseAnalysis
             if (distanceAnkles < distanceHips * 0.75f)
             {
                 // Legs are likely crossed
-                Debug.Log("Legs extremely likely crossed");
                 return true;
             }
         }

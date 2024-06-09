@@ -41,7 +41,9 @@ public static class TrackAnalysis
             // Vertical Motions
             if (Mathf.Abs(Distance.y) > StepParameters.YStepLimits.x && Mathf.Abs(Distance.y) > StepParameters.YStepLimits.y)
             {
-                foundDirections.Add(Distance.y > 0 ? MovementAnalysis.MotionDirection.Down : MovementAnalysis.MotionDirection.Up);
+                //Debug.Log(Distance.y > 0 ? "Greater" : "Lesser");
+
+                foundDirections.Add(Distance.y > 0 ? MovementAnalysis.MotionDirection.Up : MovementAnalysis.MotionDirection.Down);
             }
             
             // Horizontal Motions

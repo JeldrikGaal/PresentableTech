@@ -17,15 +17,16 @@ MonoBehaviour:
     XStepLimits: {x: -0.005, y: 0.005}
     YStepLimits: {x: -0.005, y: 0.005}
   DirectionPercentages:
-  - Direction: 0
-    Percentage: 0.3
+  - Direction: 1
     MinimumPercentage: 0.3
     MaximumPercentage: 1
   - Direction: 2
-    Percentage: 0.2
-    MinimumPercentage: 0.2
+    MinimumPercentage: 0.1
     MaximumPercentage: 1
   - Direction: 3
-    Percentage: 0.2
     MinimumPercentage: 0
     MaximumPercentage: 0.2
+  PositionConditions:
+  - Landmark: 12
+    Direction: 1
+    Type: 2

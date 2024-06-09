@@ -18,14 +18,12 @@ MonoBehaviour:
     YStepLimits: {x: -0.005, y: 0.005}
   DirectionPercentages:
   - Direction: 2
-    Percentage: 0.7
-    MinimumPercentage: 0.7
+    MinimumPercentage: 0.6
     MaximumPercentage: 1
   - Direction: 0
-    Percentage: 0.5
-    MinimumPercentage: 0.5
-    MaximumPercentage: 1
+    MinimumPercentage: 0
+    MaximumPercentage: 0.4
   - Direction: 1
-    Percentage: 0.5
-    MinimumPercentage: 0.5
-    MaximumPercentage: 1
+    MinimumPercentage: 0
+    MaximumPercentage: 0.4
+  PositionConditions: []
