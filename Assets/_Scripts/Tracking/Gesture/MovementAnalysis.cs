@@ -34,9 +34,10 @@ public class MovementAnalysis : MonoBehaviour
     {
         foreach (var gestureHolder in _gesturesToAnalyse)
         {
-            foreach (var gesture in gestureHolder.Gestures)
+            foreach (var landMark in gestureHolder.GetNeededTrackers())
             {
-                await TrackingProvider.Instance.StartLandMarkTracker(gesture.LandMarkToTrack);
+                Debug.Log(landMark);
+                await TrackingProvider.Instance.StartLandMarkTracker(landMark);
             }
         }
     }
@@ -56,9 +57,6 @@ public class MovementAnalysis : MonoBehaviour
             Analysis();
             HandleGestureCooldowns();
         }
-
-        Debug.Log(LandMarkProvider.Instance.VectorLandmarkList[PoseTrackingInfo.LandmarkIndexes[PoseTrackingInfo.LandmarkNames.RightWrist]]);
-        Debug.Log(LandMarkProvider.Instance.LandmarkList.Landmark[PoseTrackingInfo.LandmarkIndexes[PoseTrackingInfo.LandmarkNames.RightWrist]].Y);
     }
 
     private bool IsAnalysisRunning()
@@ -83,7 +81,7 @@ public class MovementAnalysis : MonoBehaviour
             List<MotionDirection> foundDirections = TrackAnalysis.GetFoundDirectionsFromTrack(track, gesture.StepAnalysisParameters);
         
             if (!AnalyseForDirectionPercentages(gesture, foundDirections, track)) return;
-            if (!AnalyseForPositionConditions(gesture, track)) return;
+            if (!AnalyseForPositionConditions(gesture, track, gestureHolder.Duration)) return;
             
         }
         if (!IsGestureOnCooldown(gestureHolder))
@@ -108,11 +106,13 @@ public class MovementAnalysis : MonoBehaviour
         return true;
     }
     
-    private bool AnalyseForPositionConditions(Gesture gesture, List<Tracker.TimeStep> track)
+    private bool AnalyseForPositionConditions(Gesture gesture, List<Tracker.TimeStep> objectTrack, float gestureHolderDuration)
     {
         foreach (var positionCondition in gesture.PositionConditions)
         {
-            if (!positionCondition.CheckPositionConditionOnTrack(track))
+            List<Tracker.TimeStep> conditionTrack =
+                TrackingProvider.Instance.GetLandMarkTracker(positionCondition.Landmark).GetTimeStepsFromLastSeconds(gestureHolderDuration);
+            if (!positionCondition.CheckPositionConditionOnTrack(objectTrack, conditionTrack))
             {
                 return false;
             }

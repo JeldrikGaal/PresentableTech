@@ -10,9 +10,16 @@ public class GestureHolder : ScriptableObject
     public float Duration;
     public float Cooldown;
     public List<Gesture> Gestures;
-    //public GestureSequence Sequence;
+
+    public List<PoseTrackingInfo.LandmarkNames> GetNeededTrackers()
+    {
+        List<PoseTrackingInfo.LandmarkNames> neededLandMarks = new List<PoseTrackingInfo.LandmarkNames>();
+
+        foreach (var gesture in Gestures)
+        {
+            neededLandMarks.AddRange(gesture.GetNeededTrackers());
+        }
+        
+        return neededLandMarks;
+    }
 }
-
-/*
-
-*/

@@ -52,45 +52,62 @@ public class Gesture : ScriptableObject
       public PositionConditionDirection Direction;
       public PositionConditionType Type;
 
-      public bool CheckPositionConditionOnTrack(List<Tracker.TimeStep> track)
+      public bool CheckPositionConditionOnTrack(List<Tracker.TimeStep> objectTrack, List<Tracker.TimeStep> conditionTrack)
       {
          switch (Type)
          {
             case PositionConditionType.Complete:
-               return track.All(CheckPositionConditionOnTimeStep);
+               Debug.Log((objectTrack.Count, conditionTrack.Count));
+               for (int i = 0; i < objectTrack.Count; i++)
+               {
+                  if (!CheckPositionConditionOnTimeSteps(objectTrack[i], conditionTrack[i]))
+                  {
+                     return false;
+                  }
+               }
+               return true;
             case PositionConditionType.Start:
-               return CheckPositionConditionOnTimeStep(track[0]);
+               return CheckPositionConditionOnTimeSteps(objectTrack[0],conditionTrack[0]);
             case PositionConditionType.End:
-               return CheckPositionConditionOnTimeStep(track[^1]);
+               return CheckPositionConditionOnTimeSteps(objectTrack[^1],conditionTrack[^1]);
             case PositionConditionType.StartAndEnd:
-               return CheckPositionConditionOnTimeStep(track[0]) && CheckPositionConditionOnTimeStep(track[^1]);
+               return CheckPositionConditionOnTimeSteps(objectTrack[0],conditionTrack[0])
+                      && CheckPositionConditionOnTimeSteps(objectTrack[^1],conditionTrack[^1]);
             default:
                throw new ArgumentOutOfRangeException();
          }
       }
 
-      private bool CheckPositionConditionOnTimeStep(Tracker.TimeStep step)
+      private bool CheckPositionConditionOnTimeSteps(Tracker.TimeStep objectStep, Tracker.TimeStep conditionStep )
       {
-         Vector3 landMarkPos = LandMarkProvider.Instance.VectorLandmarkList[PoseTrackingInfo.LandmarkIndexes[Landmark]];
-         Vector3 trackedObjectPos = step.Position;
+         Vector3 conditionObjectPos = conditionStep.Position;
+         Vector3 trackedObjectPos = objectStep.Position;
 
          switch (Direction)
          {
             case PositionConditionDirection.Above:
-               return trackedObjectPos.y > landMarkPos.y;
+               return trackedObjectPos.y > conditionObjectPos.y;
             case PositionConditionDirection.Below:
-               return trackedObjectPos.y < landMarkPos.y;
+               return trackedObjectPos.y < conditionObjectPos.y;
             case PositionConditionDirection.Left:
-               return trackedObjectPos.x < landMarkPos.x;
+               return trackedObjectPos.x < conditionObjectPos.x;
             case PositionConditionDirection.Right:
-               return trackedObjectPos.x > landMarkPos.x;
+               return trackedObjectPos.x > conditionObjectPos.x;
             default:
                throw new ArgumentOutOfRangeException();
             
          }
       }
-      
    }
-   
-   
+
+   public List<PoseTrackingInfo.LandmarkNames> GetNeededTrackers()
+   {
+      List<PoseTrackingInfo.LandmarkNames> neededLandMarks = new List<PoseTrackingInfo.LandmarkNames>();
+      
+      neededLandMarks.Add(LandMarkToTrack);
+
+      neededLandMarks.AddRange(PositionConditions.Select(positionCondition => positionCondition.Landmark));
+
+      return neededLandMarks;
+   }
 }
