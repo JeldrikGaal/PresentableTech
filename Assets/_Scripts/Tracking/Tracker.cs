@@ -1,5 +1,6 @@
 using System;
 using System.Collections.Generic;
+using Mediapipe;
 using UnityEngine;
 
 public class Tracker
@@ -12,10 +13,11 @@ public class Tracker
 
         public float Visibility;
 
-        public void SetData(Vector3 position, float time )
+        public TimeStep(Vector3 position, float time, float visibility)
         {
             Position = position;
             Time = time;
+            Visibility = visibility;
         }
     }
 
@@ -43,10 +45,10 @@ public class Tracker
         Debug.LogError("Base Class shouldn't be called");
     }
     
-    protected void AddTimeStep(Vector3 position, float time)
+    protected void AddTimeStep(Vector3 position, float time, float visibility)
     {
         LimitTimeStepsListSize();
-        _timeSteps.Add(CreateTimeStep(position, time));
+        _timeSteps.Add( new TimeStep(position, time,visibility ));
     }
     
     private void LimitTimeStepsListSize()
@@ -55,13 +57,6 @@ public class Tracker
         {
             _timeSteps.RemoveAt(0);
         }
-    }
-    
-    private TimeStep CreateTimeStep(Vector3 position, float time)
-    {
-        TimeStep newTimeStep = new TimeStep();
-        newTimeStep.SetData(position, time);
-        return newTimeStep;
     }
 
     protected bool NextTrackingTimeReached()
@@ -113,7 +108,7 @@ public class GameObjectTracker : Tracker
     public override void StartTracking()
     {
         _trackingStarted = true;
-        AddTimeStep(_objectToTrack.transform.position, Time.time);
+        AddTimeStep(_objectToTrack.transform.position, Time.time, 0);
     }
 
     public override void RunTracker()
@@ -122,7 +117,8 @@ public class GameObjectTracker : Tracker
             
         if (NextTrackingTimeReached())
         {
-            AddTimeStep(_objectToTrack.transform.position, Time.time);
+            float visibility = _objectToTrack.activeInHierarchy ? 1 : 0;
+            AddTimeStep(_objectToTrack.transform.position, Time.time, visibility);
         }
     }
 
@@ -147,12 +143,17 @@ public class LandMarkTracker : Tracker
     {
         _trackingStarted = true;
         
-        AddTimeStep(GetVectorFromTrackedLandMark(), Time.time);
+        AddTimeStep(GetVectorFromTrackedLandMark(), Time.time, 0);
     }
 
     private Vector3 GetVectorFromTrackedLandMark()
     {
         return LandMarkProvider.Instance.VectorLandmarkList[PoseTrackingInfo.LandmarkIndexes[_landmarkToTrack]];
+    }
+
+    private float GetVisibilityFromTrackedLandMark()
+    {
+        return LandMarkProvider.Instance.LandmarkList.Landmark[PoseTrackingInfo.LandmarkIndexes[_landmarkToTrack]].Visibility;
     }
     
     public override void RunTracker()
@@ -161,7 +162,7 @@ public class LandMarkTracker : Tracker
         
         if (NextTrackingTimeReached())
         {
-            AddTimeStep(GetVectorFromTrackedLandMark(), Time.time);
+            AddTimeStep(GetVectorFromTrackedLandMark(), Time.time, GetVisibilityFromTrackedLandMark());
         }
     }
     

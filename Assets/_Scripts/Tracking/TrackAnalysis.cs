@@ -14,6 +14,8 @@ public static class TrackAnalysis
         public Vector2 XStepLimits = new Vector2(-0.005f, 0.005f);
         [HideInInspector]
         public Vector2 YStepLimits = new Vector2(-0.005f, 0.005f);
+        [HideInInspector]
+        public float VisibilityThreshold = 0.7f;
     }
 
     [Serializable]
@@ -38,6 +40,13 @@ public static class TrackAnalysis
         {
             List<MovementAnalysis.MotionDirection> foundDirections = new List<MovementAnalysis.MotionDirection>();
             
+            // If not both steps are visible no motions should be detected
+            if (! BothStepVisible())
+            {
+                foundDirections.Add(MovementAnalysis.MotionDirection.Unclear);
+                return foundDirections;
+            }
+            
             // Vertical Motions
             if (Mathf.Abs(Distance.y) > StepParameters.YStepLimits.x && Mathf.Abs(Distance.y) > StepParameters.YStepLimits.y)
             {
@@ -58,6 +67,12 @@ public static class TrackAnalysis
             }
             
             return foundDirections;
+        }
+        
+        private bool BothStepVisible()
+        {
+            return Step1.Visibility > StepParameters.VisibilityThreshold &&
+                   Step1.Visibility > StepParameters.VisibilityThreshold;
         }
     }
 
