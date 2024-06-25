@@ -16,12 +16,15 @@ MonoBehaviour:
   StepAnalysisParameters:
     XStepLimits: {x: -0.005, y: 0.005}
     YStepLimits: {x: -0.005, y: 0.005}
+    VisibilityThreshold: 0.7
   DirectionPercentages:
   - Direction: 0
-    Percentage: 0.2
     MinimumPercentage: 0.2
     MaximumPercentage: 1
   - Direction: 1
-    Percentage: 0.2
     MinimumPercentage: 0.2
     MaximumPercentage: 1
+  PositionConditions:
+  - Landmark: 4
+    Direction: 0
+    Type: 0

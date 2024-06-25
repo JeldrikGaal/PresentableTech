@@ -18,7 +18,7 @@ MonoBehaviour:
     YStepLimits: {x: -0.005, y: 0.005}
     VisibilityThreshold: 0.7
   DirectionPercentages:
-  - Direction: 0
+  - Direction: 2
     MinimumPercentage: 0.2
     MaximumPercentage: 1
   PositionConditions:

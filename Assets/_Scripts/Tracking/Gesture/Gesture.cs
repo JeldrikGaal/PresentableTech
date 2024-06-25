@@ -1,14 +1,14 @@
 using System;
 using System.Collections.Generic;
 using System.Linq;
-using Mediapipe;
+using Sirenix.OdinInspector;
 using UnityEngine;
 
 [CreateAssetMenu(menuName = "Custom/Gesture")]
 public class Gesture : ScriptableObject
 {
    public PoseTrackingInfo.LandmarkNames LandMarkToTrack;
-
+   [HideInInspector]
    public TrackAnalysis.StepAnalysisParameters StepAnalysisParameters;
    public List<DirectionPercentage> DirectionPercentages;
    public List<PositionCondition> PositionConditions;
@@ -16,6 +16,7 @@ public class Gesture : ScriptableObject
    [Serializable]
    public class DirectionPercentage
    {
+      [EnumToggleButtons]
       public MovementAnalysis.MotionDirection Direction;
       
       [Range(0,1)]
@@ -32,6 +33,7 @@ public class Gesture : ScriptableObject
    [Serializable]
    public class PositionCondition
    {
+      [EnumToggleButtons]
       public enum PositionConditionDirection
       {
          Above,
@@ -40,6 +42,7 @@ public class Gesture : ScriptableObject
          Right
       }
 
+      [EnumToggleButtons]
       public enum PositionConditionType
       {
          Complete,
